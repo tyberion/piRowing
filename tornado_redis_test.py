@@ -6,16 +6,21 @@ import pickle
 
 r = redis.StrictRedis(host='localhost', port=6378, db=0)
 
-data = {'text','Hello, world!'}
+data = dict(text='Hello, world!',r=r)
 
 class MainHandler(tornado.web.RequestHandler):
-    def initialize(self, data)
-	self.data = data;
+    def initialize(self, data):
+        self.data = data
     def get(self):
-        self.write(self.data['text'])
+        r = self.data['r']
+        text = r.get('text')
+        if not text == None:
+            self.write(text)
+        else:
+            self.write('not found')
 
 application = tornado.web.Application([
-    (r"/", MainHandler, data),
+    (r"/", MainHandler, dict(data=data)),
 ])
 
 if __name__ == "__main__":
