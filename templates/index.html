@@ -1,0 +1,41 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>Sample test</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+</head>
+<body>
+    <h1>Data</h1>
+    <h2>Log 01</h2>
+
+    <div id="log01">0</div>
+    
+    <h2>Log 02</h2>
+    
+    <div id="log02">0</div>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+            if ("WebSocket" in window) {
+              var ws = new WebSocket("ws://{{server}}:{{port}}/realtime/");
+              ws.onopen = function() {};
+              ws.onmessage = function (evt) {
+                  data = eval("(" + evt.data + ")");
+
+                  var html = $("#log01").html();
+                  html = "<p>"+data.msg01+"</p>";
+                  $("#log01").html(html);
+
+                  var html = $("#log02").html();
+                  html = "<p>"+data.msg02+"</p>";
+                  $("#log02").html(html);
+              };
+              ws.onclose = function() {};
+            } else {
+              alert("WebSocket not supported");
+            }
+        });
+    </script>
+</body>
+</html>
+
