@@ -17,7 +17,7 @@ class MainHandler(tornado.web.RequestHandler):
         if not text == None:
             self.write(text)
         else:
-            self.write('not found')
+            self.write(self.data['text'])
 
 application = tornado.web.Application([
     (r"/", MainHandler, dict(data=data)),
