@@ -13,9 +13,6 @@ import os.path
 SERVER = '192.168.178.60'
 PORT = 8888
 
-LOADER = tornado.template.Loader('templates').load('index.html')
-TEMPLATE =  LOADER.generate(server=SERVER, port='%d' % PORT)
-
 LISTENERS = []
 
 def redis_listener():
@@ -29,7 +26,7 @@ def redis_listener():
 
 class NewMsgHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('index.html', server=SERVER, port='%d' % PORT)
+        self.render('graph.html', server=SERVER, port='%d' % PORT)
 
 class RealtimeHandler(tornado.websocket.WebSocketHandler):
     def open(self):
