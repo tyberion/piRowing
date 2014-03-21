@@ -6,11 +6,13 @@ import tornado.ioloop
 import tornado.web
 import tornado.template
 
+import socket
+
 import redis
 
 import os.path
 
-SERVER = '192.168.178.60'
+SERVER = socket.gethostname()
 PORT = 8888
 
 LISTENERS = []
