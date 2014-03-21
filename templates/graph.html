@@ -4,43 +4,47 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
 
-      // Load the Visualization API and the piechart package.
-      google.load('visualization', '1', {'packages':['corechart']});
+    // Load the Visualization API and the piechart package.
+    google.load('visualization', '1', {'packages':['corechart']});
 
-      // Set a callback to run when the Google Visualization API is loaded.
-     var ws = new WebSocket("ws://{{server}}:{{port}}/realtime/");
-
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(init);
+    var ws = new WebSocket("ws://{{server}}:{{port}}/realtime/");
     var wsdata;
 
     ws.onopen = function(evt) {};
     ws.onclose = function(evt) {};
 
-    google.setOnLoadCallback(init);
-
     function init() {
+    
     ws.onmessage = function(evt) {
+        Nrows = data.getNumberOfRows();
         wsdata = eval("(" + evt.data + ")");
-        data.setValue(0, 1, wsdata.data);
-        drawChart();
+        if (wsdata.length == 0) {
+          data.removeRows(0, Nrows);
+          drawChart();
+        } else {
+          data.addRows(wsdata);
+          drawChart();
+        }
+        console.log(wsdata);
     };  
 
     var options = {
-      width: 400,
-      height: 240,
+      width: 600,
+      height: 340,
       animation:{
-        duration: 1000,
+        duration: 100,
         easing: 'out',
       },
-      vAxis: {minValue:0, maxValue:1000}
+      vAxis: {minValue:-2, maxValue:2}
     };
+
     var data = new google.visualization.DataTable();
-    data.addColumn('string', 'N');
+    data.addColumn('number', 'N');
     data.addColumn('number', 'Value');
-    data.addRow(['V', 200]);
 
-    console.log(data);
-
-    var chart = new google.visualization.ColumnChart(
+    var chart = new google.visualization.LineChart(
         document.getElementById('visualization'));
 
     function drawChart() {
