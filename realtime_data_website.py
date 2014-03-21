@@ -49,6 +49,7 @@ settings = dict(
 application = tornado.web.Application([
     (r'/', NewMsgHandler),
     (r'/realtime/', RealtimeHandler),
+    (r'/data/(data\.json)', tornado.web.StaticFileHandler, {'path': '.'}),
 ], **settings)
 
 if __name__ == "__main__":
