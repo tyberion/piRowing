@@ -29,6 +29,9 @@ def redis_listener():
 class NewMsgHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('graph.html', server=SERVER, port='%d' % PORT)
+        
+    def post(self):
+        pass
 
 class RealtimeHandler(tornado.websocket.WebSocketHandler):
     def open(self):
