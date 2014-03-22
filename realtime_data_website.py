@@ -23,6 +23,7 @@ def redis_listener():
     ps.subscribe('test_realtime')
     for message in ps.listen():
         for element in LISTENERS:
+            print(element)
             element.write_message(message['data'])
 
 
