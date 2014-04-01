@@ -18,7 +18,7 @@ mesg = []
 
 for idx,(x,y) in enumerate(zip(xx, yy)):
     mesg.append([x,y])
-    if idx % 1 == 0:
+    if idx % 10 == 0:
         r.publish('test_realtime',mesg)
         time.sleep(0.2)
         mesg = []
