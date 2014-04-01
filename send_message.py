@@ -1,5 +1,6 @@
 import redis
 import time
+import random
 
 import numpy as np
 
@@ -10,9 +11,25 @@ time.sleep(0.1)
 
 N = 1000;
 
-xx = np.linspace(0,2*np.pi,N)
-yy = np.sin(xx)
-yy += (np.random.rand(N)-0.5)/2
+f = 100 #Hz
+
+T = np.arange(N)/f
+
+v = 300 #rpm
+
+L = 0.5 #cm
+
+r = 20 #cm
+
+theta0 = random.random()*2*np.pi
+
+Lalpha = L/r
+
+vAlpha = v*2*np.pi/60
+
+theta = (theta0 + vAlpha * T) % (2*np.pi)
+
+gpioPin = theta<Lalpha
 
 mesg = []
 

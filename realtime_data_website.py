@@ -23,12 +23,16 @@ def redis_listener():
     ps.subscribe('test_realtime')
     for message in ps.listen():
         for element in LISTENERS:
+            print(element)
             element.write_message(message['data'])
 
 
 class NewMsgHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('graph.html', server=SERVER, port='%d' % PORT)
+        
+    def post(self):
+        pass
 
 class RealtimeHandler(tornado.websocket.WebSocketHandler):
     def open(self):
