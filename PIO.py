@@ -77,9 +77,9 @@ t0 = time.time()
 N = 0
 T = []
 while True:
-    tt = time.time()
     output_bank = get_pins(bus, ADDRESS, 'A')
     a = get_pin_values(output_bank,[0,1,2,3,4,5,6,7])
+    #print a[7]
 
     if a[7]-a_prev == 1:
         t = time.time()
@@ -87,8 +87,8 @@ while True:
         t0 = t
         print((N,T[N]))
         N+=1
-        if N == 500:
-            pickle.dump(T, open('times.pcl', 'wb'))
+        if N % 500 == 0:
+            pickle.dump(T, open('times-%d.pcl' % N, 'wb'))
             print('dumped')
     a_prev = a[7]
-
+    time.sleep(0.002)
