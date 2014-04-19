@@ -1,7 +1,7 @@
 /*css for data elements*/
 
 body, div, h1, h2, h3, h4, h5, h6, p, ul, li, img, header, section, aside, footer, button {
-	margin: 0; padding: 0; border: 0;
+	margin: 5pt; padding: 0; border: 0;
 }
 
 body {
@@ -9,4 +9,10 @@ body {
 	color: #000;
 	background: #fff; 
 	/*background: +linear-gradient (top, #111 0%, #222 100%);*/
+}
+#time {
+	font-size: 22pt;
+}
+#nPulls {
+	font-size: 22pt;
 }

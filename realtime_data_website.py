@@ -28,6 +28,8 @@ def redis_listener():
     ps.subscribe('rowing_data')
     print(ps)
     for message in ps.listen():
+        if message['data'] == 'stop':
+            break
         for element in LISTENERS:
             print(element)
             element.write_message(message['data'])
@@ -73,5 +75,6 @@ if __name__ == "__main__":
         tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
         print("stopping program")
-        #TODO: disable thread 
+        r = redis.Redis(host='localhost', db=1)
+        r.publish('rowing_data','stop')
         tornado.ioloop.IOLoop.instance().stop()
