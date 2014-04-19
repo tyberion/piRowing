@@ -65,7 +65,13 @@ application = tornado.web.Application([
 ], **settings)
 
 if __name__ == "__main__":
-    threading.Thread(target=redis_listener).start()
+    T = threading.Thread(target=redis_listener)
+    T.start()
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(PORT)
-    tornado.ioloop.IOLoop.instance().start()
+    try:
+        tornado.ioloop.IOLoop.instance().start()
+    except KeyboardInterrupt:
+        print("stopping program")
+        #TODO: disable thread 
+        tornado.ioloop.IOLoop.instance().stop()

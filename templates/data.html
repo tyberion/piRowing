@@ -1,15 +1,26 @@
-<!DOCTYPE>
+<!DOCTYPE html> 
 <html>
 <head>
     <title>Sample test</title>
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/data.css" media="screen, handheld" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
-    <h1>Data</h1>
-    <h2>Number of pulls</h2>
+    <div id="container">
+	<header>
+            <h1>Data from the Rowing Machine</h1>
+	</header>
+	<section>
+		<h2>Rowing Time</h2>
+		<div id="time">00:00:00</div>
 
-    <div id="nPulls">0</div>
-    
+		<h2>Number of Pulls</h2>
+        <div id="nPulls">0</div>
+	</section>
+	<footer>
+	</footer>
+    </div>    
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function(){
             if ("WebSocket" in window) {
@@ -17,10 +28,14 @@
               ws.onopen = function() {};
               ws.onmessage = function (evt) {
                   data = eval("(" + evt.data + ")");
-		  console.log(data)
+				  console.log(data)
 
-                  var html = $("#nPulls").html();
-                  html = "<p>"+data.nPulls+"</p>";
+                  var html = $("#time").html();
+                  html = data.time;
+                  $("#time").html(html);
+
+                  html = $("#nPulls").html();
+                  html = data.nPulls;
                   $("#nPulls").html(html);
               };
               ws.onclose = function() {};
