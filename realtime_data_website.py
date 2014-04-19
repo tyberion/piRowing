@@ -14,7 +14,7 @@ import os.path
 
 def getNetworkIp():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(('www.google.com', 0))
+    s.connect(('192.168.178.1', 0))
     return s.getsockname()[0]
 
 SERVER = getNetworkIp()
