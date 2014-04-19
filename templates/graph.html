@@ -20,6 +20,7 @@
     ws.onmessage = function(evt) {
         Nrows = data.getNumberOfRows();
         wsdata = eval("(" + evt.data + ")");
+	console.log(wsdata)
         if (wsdata.length == 0) {
           data.removeRows(0, Nrows);
           drawChart();

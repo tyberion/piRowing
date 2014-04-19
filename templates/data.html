@@ -17,6 +17,7 @@
               ws.onopen = function() {};
               ws.onmessage = function (evt) {
                   data = eval("(" + evt.data + ")");
+		  console.log(data)
 
                   var html = $("#nPulls").html();
                   html = "<p>"+data.nPulls+"</p>";

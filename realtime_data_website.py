@@ -12,15 +12,21 @@ import redis
 
 import os.path
 
-SERVER = socket.gethostname()
+def getNetworkIp():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(('www.google.com', 0))
+    return s.getsockname()[0]
+
+SERVER = getNetworkIp()
 PORT = 8888
 
 LISTENERS = []
 
 def redis_listener():
-    r = redis.Redis(host='localhost', db=2)
+    r = redis.Redis(host='localhost', db=1)
     ps = r.pubsub()
-    ps.subscribe('test_realtime')
+    ps.subscribe('rowing_data')
+    print(ps)
     for message in ps.listen():
         for element in LISTENERS:
             print(element)
@@ -29,13 +35,15 @@ def redis_listener():
 
 class NewMsgHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('graph.html', server=SERVER, port='%d' % PORT)
+	print('starting NewMsgHandler')
+        self.render('data.html', server=SERVER, port='%d' % PORT)
         
     def post(self):
         pass
 
 class RealtimeHandler(tornado.websocket.WebSocketHandler):
     def open(self):
+	print('starting RealtimeHandler')
         LISTENERS.append(self)
 
     def on_message(self, message):
@@ -53,7 +61,7 @@ settings = dict(
 application = tornado.web.Application([
     (r'/', NewMsgHandler),
     (r'/realtime/', RealtimeHandler),
-    (r'/data/(data\.json)', tornado.web.StaticFileHandler, {'path': '.'}),
+    #(r'/data/(data\.json)', tornado.web.StaticFileHandler, {'path': '.'}),
 ], **settings)
 
 if __name__ == "__main__":
