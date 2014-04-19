@@ -8,9 +8,10 @@ nowString = '%04d%02d%02dT%02d%02d' % (now.year, now.month, now.day, now.hour, n
 
 print(nowString)
 
-r = redis.Redis(host='localhost', db=0)
+rr = redis.Redis(host='localhost', db=0)
+rw = redis.Redis(host='localhost', db=1)
 
-ps = r.pubsub()
+ps = rr.pubsub()
 ps.subscribe('rowing')
 
 N = 5
@@ -30,24 +31,34 @@ data_current = np.zeros((1,3))
 T = 0
 I = 0
 
+minSz = 3
+alpha0 = np.zeros(minSz)
+nPulls = 0
+
 for message in ps.listen():
     dt = float(message['data'])
-    T += dt
-    omega_raw = np.append(omega_raw[1:],np.pi/dt)
+    if dt < 5:
+        T += dt
+        omega_raw = np.append(omega_raw[1:],np.pi/dt)
 
-    if I > N:
-	omega = (omega_raw * filt).sum()
-	alpha = (omega_raw * dfilt).sum()/np.pi*omega
+        if I > N:
+            omega = (omega_raw * filt).sum()
+            alpha = (omega_raw * dfilt).sum()/np.pi*omega
+            
+            if (alpha0 < 0).sum() == minSz and alpha > 0:
+                nPulls += 1 
+                rw.publish('rowing_data',{'nPulls':nPulls,'time':str(datetime.timedelta(seconds=T))})
 
-	data_current[0,0] = T
-	data_current[0,1] = omega
-	data_current[0,2] = alpha
-	
-	data = np.append(data,data_current,axis=0)
 
-	if I%100 == 0:
-	    np.save('data/%s' % nowString, data)
-            #pickle.dump(data, open('data/%s.pcl' % nowString, 'wb'))
+            data_current[0,0] = T
+            data_current[0,1] = omega
+            data_current[0,2] = alpha
+            
+            data = np.append(data,data_current,axis=0)
 
-    I+=1
+            if I%100 == 0:
+                np.save('data/%s' % nowString, data)
+                #pickle.dump(data, open('data/%s.pcl' % nowString, 'wb'))
+
+        I+=1
 
