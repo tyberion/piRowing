@@ -79,5 +79,7 @@ for message in ps.listen():
                 np.save('data/%s' % nowString, data)
                 #pickle.dump(data, open('data/%s.pcl' % nowString, 'wb'))
 
+            alpha0 = np.append(alpha0[1:], alpha)
+
         I+=1
 
