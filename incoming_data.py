@@ -1,7 +1,7 @@
 import redis
 import pickle
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def find_oa_relation(data):
     """
@@ -75,7 +75,7 @@ for message in ps.listen():
             if (alpha0 < 0).sum() == minSz and alpha > 0:
                 nPulls += 1 
                 data_stroke = np.zeros((0,3))
-                rw.publish('rowing_data',{'nPulls':nPulls,'time':str(datetime.timedelta(seconds=T))})
+                rw.publish('rowing_data',{'nPulls':nPulls,'time':str(timedelta(seconds=round(T)))})
                 np.save('data/%s' % nowString, data)
                 #pickle.dump(data, open('data/%s.pcl' % nowString, 'wb'))
 
