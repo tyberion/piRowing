@@ -74,8 +74,8 @@ for message in ps.listen():
 
                 data_publish = {'nPulls':nPulls,
                                 'time':str(timedelta(seconds=round(T))),
-                                'Energy':E,
-                                'Power':P,
+                                'energy':E,
+                                'power':P,
                                 'speed':v,
                                 'pace':str(timedelta(seconds=round(p))),
                                 'distance':x}
