@@ -3,17 +3,10 @@ import pickle
 import numpy as np
 from datetime import datetime, timedelta
 
-w = [[], # resistance 1
-     [], # resistance 2
-     [], # resistance 3
-     [], # resistance 4
-     [], # resistance 5
-     [], # resistance 6
-     [], # resistance 7
-     [], # resistance 8
-     [], # resistance 9
-     []] # resistance 10
+R = 4;
 
+w = [0.2*R,3] 
+II = 0.1
 now = datetime.today()
 nowString = '%04d%02d%02dT%02d%02d' % (now.year, now.month, now.day, now.hour, now.minute)
 
@@ -44,6 +37,7 @@ data_stroke = np.zeros((0,3))
 
 T = 0
 I = 0
+x = 0
 
 alpha0 = np.zeros(minSz)
 nPulls = 0
@@ -67,10 +61,29 @@ for message in ps.listen():
 
             if (alpha0 < 0).sum() == minSz and alpha > 0:
                 nPulls += 1 
-                data_stroke = np.zeros((0,3))
+
                 # add removal of the resistance acceleration and calculate energy and work per stroke
-                rw.publish('rowing_data',{'nPulls':nPulls,'time':str(timedelta(seconds=round(T)))})
+                dT = data_stroke[:,0].max() - data_stroke[:,0].min()
+                tau = II * (data_stroke[:,2] + w[0]*data_stroke[:,1] + w[1])
+                tau[tau<0] = 0
+                E = tau.sum()*np.pi*tau.size
+                P = E/dT
+                v = (P/2.8)**(1./3.)
+                p = 500*v
+                x += v*dT
+
+                data_publish = {'nPulls':nPulls,
+                                'time':str(timedelta(seconds=round(T))),
+                                'Energy':E,
+                                'Power':P,
+                                'speed':v,
+                                'pace':str(timedelta(seconds=round(p))),
+                                'distance':x}
+
+
+                rw.publish('rowing_data',data_publish)
                 np.save('data/%s' % nowString, data)
+                data_stroke = np.zeros((0,3))
 
             alpha0 = np.append(alpha0[1:], alpha)
 
