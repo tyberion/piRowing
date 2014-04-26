@@ -1,18 +1,41 @@
 /*css for data elements*/
 
 body, div, h1, h2, h3, h4, h5, h6, p, ul, li, img, header, section, aside, footer, button {
-	margin: 5pt; padding: 0; border: 0;
+    margin: 5pt; padding: 0; border: 0;
 }
 
 body {
-	font-family: Helvetica, Arial, Sans-Serif;
-	color: #000;
-	background: #fff; 
-	/*background: +linear-gradient (top, #111 0%, #222 100%);*/
+    font-family: Helvetica, Arial, Sans-Serif;
+    color: #000;
+    background: #fff; 
+    /*background: +linear-gradient (top, #111 0%, #222 100%);*/
 }
+
 #time {
-	font-size: 22pt;
+    font-size: 22pt;
 }
+
 #nPulls {
-	font-size: 22pt;
+    font-size: 22pt;
 }
+
+#energy {
+    font-size: 22pt;
+}
+
+#power {
+    font-size: 22pt;
+}
+
+#speed {
+    font-size: 22pt;
+}
+
+#pace {
+    font-size: 22pt;
+}
+
+#distance {
+    font-size: 22pt;
+}
+
