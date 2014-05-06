@@ -1,9 +1,10 @@
 import redis
+import sys
 import pickle
 import numpy as np
 from datetime import datetime, timedelta
 
-R = 4;
+R = int(sys.argv[1]);
 
 w = [0.2*R,3] 
 II = 0.1
@@ -40,6 +41,7 @@ I = 0
 x = 0
 
 alpha0 = np.zeros(minSz)
+dt_ppm = np.zeros(3)
 nPulls = 0
 
 for message in ps.listen():
@@ -64,21 +66,24 @@ for message in ps.listen():
 
                 # add removal of the resistance acceleration and calculate energy and work per stroke
                 dT = data_stroke[:,0].max() - data_stroke[:,0].min()
+                dt_ppm = np.append(dt_ppm[1:], dT)
+                ppm = 1/dt_ppm.mean()*60
                 tau = II * (data_stroke[:,2] + w[0]*data_stroke[:,1] + w[1])
                 tau[tau<0] = 0
-                E = tau.sum()*np.pi*tau.size
+                E = tau.sum()*np.pi
                 P = E/dT
                 v = (P/2.8)**(1./3.)
-                p = 500*v
+                p = 500/v
                 x += v*dT
 
                 data_publish = {'nPulls':nPulls,
                                 'time':str(timedelta(seconds=round(T))),
-                                'energy':E,
-                                'power':P,
-                                'speed':v,
+                                'energy':round(E),
+                                'power':round(P),
+                                #'speed':round(v,1),
+                                'speed':round(ppm),
                                 'pace':str(timedelta(seconds=round(p))),
-                                'distance':x}
+                                'distance':round(x)}
 
 
                 rw.publish('rowing_data',data_publish)

@@ -18,14 +18,11 @@
 		<h2>Number of Pulls</h2>
         <div id="nPulls">0</div>
 
-		<h2>Energy (J)</h2>
-        <div id="energy">0</div>
+		<h2>Pulls per Minute</h2>
+        <div id="speed">0</div>
 
 		<h2>Power (W)</h2>
         <div id="power">0</div>
-
-		<h2>Speed (m/s)</h2>
-        <div id="speed">0</div>
 
 		<h2>Pace (min/500m)</h2>
         <div id="pace">00:00:00</div>
@@ -52,6 +49,10 @@
                   html = $("#nPulls").html();
                   html = data.nPulls;
                   $("#nPulls").html(html);
+
+                  html = $("#speed").html();
+                  html = data.speed;
+                  $("#speed").html(html);
 
                   html = $("#energy").html();
                   html = data.energy;
